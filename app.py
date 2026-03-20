@@ -4,6 +4,27 @@ import pandas as pd
 # Configuración de la página
 st.set_page_config(page_title="Radar Inversiones 2026", layout="wide", page_icon="📈")
 
+# --- SISTEMA DE PROTECCIÓN (CONTRASEÑA) ---
+def check_password():
+    def password_entered():
+        if st.session_state["password"] == "radar2026":
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        st.text_input("🔒 Ingresa la contraseña secreta para acceder al Radar:", type="password", key="password", on_change=password_entered)
+        return False
+    elif not st.session_state["password_correct"]:
+        st.text_input("🔒 Ingresa la contraseña secreta para acceder al Radar:", type="password", key="password", on_change=password_entered)
+        st.error("Contraseña incorrecta. Intenta nuevamente.")
+        return False
+    return True
+
+if not check_password():
+    st.stop()  # Si no ponen la clave, la app se detiene aquí y no muestra los datos
+
 st.title("📈 Radar Inversiones Corto Plazo Argentina 2026")
 st.markdown("Aplicación web automatizada basada en Python y Pandas.")
 
